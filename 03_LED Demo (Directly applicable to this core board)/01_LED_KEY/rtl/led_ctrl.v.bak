@@ -1,0 +1,43 @@
+/***************************************************
+*	Module Name		:	led_ctrl		   
+*	Engineer			:	小梅哥
+*	Target Device	:	10CL025YU256C8
+*	Tool versions	:	Quartus Prime 18.1
+*	Create Date		:	2021-12-20
+*	Revision			:	v1.0
+*	Description		:  根据按键结果实现加减法计数器设计并用LED显示结果
+**************************************************/
+
+module led_ctrl(
+			Clk,        //50M时钟输入
+			Rst_n,      //模块复位
+			key_flag0,  //按键S0标志信号
+			key_flag1,  //按键S1标志信号
+			key_state0, //按键S0状态信号
+			key_state1, //按键S0状态信号
+			led
+		);
+
+	input Clk;
+	input Rst_n;
+	input key_flag0,key_flag1;
+	
+	input key_state0,key_state1;
+	
+	output [1:0]led;
+	
+	reg [1:0]led_r;
+	
+	always@(posedge Clk or negedge Rst_n)
+	if(!Rst_n)
+		led_r <= 2'b00;
+	else if(key_flag0 && !key_state0)
+		led_r <= led_r + 1'b1;
+	else if(key_flag1 && !key_state1)
+		led_r <= led_r - 1'b1;
+	else
+		led_r <= led_r;
+		
+	assign led = ~led_r;
+		
+endmodule
